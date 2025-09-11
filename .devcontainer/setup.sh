@@ -1,12 +1,7 @@
 #!/bin/bash
 set -e
 
-# Устанавливаем Git LFS
-sudo apt-get update
-curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
-sudo apt-get install -y git-lfs
-
-# Настройка Python
+# Python пакеты
 pip install --upgrade pip
 pip install jupyterlab nbconvert
 
