@@ -1,15 +1,14 @@
 {
   "name": "C# Polyglot Notebooks",
-  "image": "mcr.microsoft.com/devcontainers/dotnet:9.0",
+  "build": {
+    "dockerfile": ".devcontainer/Dockerfile",
+    "context": ".."
+  },
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers/features/python:1": {
-      "version": "3.11"
-    },
     "ghcr.io/devcontainers/features/git-lfs:1": {}
   },
-  "postCreateCommand": "bash -lc 'bash ./.devcontainer/setup.sh'",
-  "postStartCommand": "git lfs pull ",
+  "postStartCommand": "bash -lc 'git lfs pull; if [ -f MOEL/Lab1/src/lab1.ipynb ]; then python3 -m jupyter nbconvert --to notebook --execute MOEL/Lab1/src/lab1.ipynb --output out_exec_lab1.ipynb --output-dir MOEL/Lab1/src; elif [ -f Lab1/src/lab1.ipynb ]; then python3 -m jupyter nbconvert --to notebook --execute Lab1/src/lab1.ipynb --output out_exec_lab1.ipynb --output-dir Lab1/src; else echo \"[devcontainer] Notebook not found. Skipping.\"; fi'",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -23,6 +22,6 @@
   },
   "remoteUser": "vscode",
   "remoteEnv": {
-    "PATH": "${containerEnv:PATH}:/home/vscode/.dotnet/tools:/root/.dotnet/tools"
+    "PATH": "${containerEnv:PATH}:/home/vscode/.dotnet/tools"
   }
 }
