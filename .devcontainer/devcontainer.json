@@ -1,14 +1,15 @@
 {
   "name": "C# Polyglot Notebooks",
-  "build": {
-    "dockerfile": ".devcontainer/Dockerfile",
-    "context": ".."
-  },
+  "image": "mcr.microsoft.com/devcontainers/dotnet:9.0",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    },
     "ghcr.io/devcontainers/features/git-lfs:1": {}
   },
-  "postStartCommand": "bash -lc 'git lfs pull; if [ -f MOEL/Lab1/src/lab1.ipynb ]; then python3 -m jupyter nbconvert --to notebook --execute MOEL/Lab1/src/lab1.ipynb --output out_exec_lab1.ipynb --output-dir MOEL/Lab1/src; elif [ -f Lab1/src/lab1.ipynb ]; then python3 -m jupyter nbconvert --to notebook --execute Lab1/src/lab1.ipynb --output out_exec_lab1.ipynb --output-dir Lab1/src; else echo \"[devcontainer] Notebook not found. Skipping.\"; fi'",
+  "postCreateCommand": "bash -lc 'set -euo pipefail; export PATH=\"$HOME/.local/bin:$PATH\"; python -m pip install --upgrade pip --no-input; python -m pip install --no-input --user jupyterlab nbconvert; dotnet tool install -g Microsoft.dotnet-interactive || dotnet tool update -g Microsoft.dotnet-interactive; /home/vscode/.dotnet/tools/dotnet-interactive jupyter install --default-kernel csharp || true'",
+  "postStartCommand": "git lfs pull",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -22,6 +23,6 @@
   },
   "remoteUser": "vscode",
   "remoteEnv": {
-    "PATH": "${containerEnv:PATH}:/home/vscode/.dotnet/tools"
+    "PATH": "${containerEnv:PATH}:/home/vscode/.local/bin:/home/vscode/.dotnet/tools:/root/.dotnet/tools"
   }
 }
