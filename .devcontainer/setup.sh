@@ -7,6 +7,7 @@ sudo apt-get install -y git-lfs
 
 # Настройка Git LFS
 git lfs install
+git lfs pull
 
 # Python пакеты
 pip install --upgrade pip
