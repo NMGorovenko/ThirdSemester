@@ -3,7 +3,12 @@ set -e
 
 # Базовые пакеты
 sudo apt-get update
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
 sudo apt-get install -y git-lfs
+
+# Настройка Git LFS
+git lfs install
+git lfs pull
 
 # Настройка Git LFS
 git lfs install
