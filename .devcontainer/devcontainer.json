@@ -2,14 +2,12 @@
   "name": "C# Polyglot Notebooks",
   "image": "mcr.microsoft.com/devcontainers/dotnet:8.0",
   "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.11"
     }
   },
-  "containerEnv": {
-    "PATH": "${containerEnv:PATH}:/home/vscode/.dotnet/tools:/root/.dotnet/tools"
-  },
-  "postCreateCommand": "dotnet tool install -g Microsoft.dotnet-interactive && $HOME/.dotnet/tools/dotnet-interactive jupyter install --default-kernel csharp",
+  "postCreateCommand": "./.devcontainer/setup.sh",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -21,5 +19,8 @@
       ]
     }
   },
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:/home/vscode/.dotnet/tools:/root/.dotnet/tools"
+  }
 }
