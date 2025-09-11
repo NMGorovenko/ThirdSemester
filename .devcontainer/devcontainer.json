@@ -1,0 +1,23 @@
+{
+  "name": "C# Notebooks",
+  "image": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    }
+  },
+  "postCreateCommand": "dotnet tool install -g Microsoft.dotnet-interactive && $HOME/.dotnet/tools/dotnet-interactive jupyter install --default-kernel csharp",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.dotnet-interactive-vscode",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.jupyter-keymap",
+        "ms-toolsai.jupyter-renderers",
+        "ms-python.python"
+      ]
+    }
+  },
+  "remoteUser": "vscode"
+}
+
