@@ -8,8 +8,8 @@
     },
     "ghcr.io/devcontainers/features/git-lfs:1": {}
   },
-  "postCreateCommand": "./.devcontainer/setup.sh",
-  "postStartCommand": "git lfs pull",
+  "postCreateCommand": "bash -lc 'bash ./.devcontainer/setup.sh'",
+  "postStartCommand": "git lfs pull ",
   "customizations": {
     "vscode": {
       "extensions": [
