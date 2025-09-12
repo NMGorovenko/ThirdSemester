@@ -12,7 +12,8 @@
 **Запуск (рекомендуется) — GitHub Codespaces**
 - Откройте репозиторий на GitHub и нажмите `Code → Codespaces → Create codespace on develop`.
 - ![Скрин: запуск Codespaces](../../docs/images/codespaces-create.png)
-- После подготовки окружения всё уже установлено: .NET SDK, JupyterLab/nbconvert, .NET Interactive, Git LFS. Датасеты подтянутся автоматически (в контейнере выполняется `git lfs pull`).
+- После подготовки окружения всё уже установлено: .NET SDK, JupyterLab/nbconvert, .NET Interactive, Git LFS. Датасеты подтянутся автоматически.
+- Важно: после старта Codespace подождите 1–2 минуты — устанавливаются расширения и выполняются скрипты postCreate/postStart; первые попытки запуска могут ещё не сработать.
 - После старта контейнера откройте терминал и перейдите в папку работы: `cd MOEL/Lab1`.
 - Выполните тетрадку через CLI:
   - `jupyter nbconvert --to notebook --execute src/lab1.ipynb --output out_exec_lab1.ipynb --output-dir src`
