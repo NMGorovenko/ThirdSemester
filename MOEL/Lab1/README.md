@@ -26,6 +26,16 @@
 
 Примечание: состав контейнера и автокоманды см. в `MOEL/README.md` (разделы “Состав devcontainer” и “Что автоматически выполняется”).
 
+**Альтернатива: локально в Dev Container (VS Code)**
+- Зачем: то же окружение, что в Codespaces, без установки SDK локально.
+- Требуется: Docker Desktop, VS Code, расширение `Dev Containers`.
+- Откройте репозиторий в VS Code и выберите `Reopen in Container`.
+- Подождите 1–2 минуты, пока завершится настройка контейнера (postCreate/postStart, расширения).
+- Терминал в контейнере: `cd MOEL/Lab1` и выполните
+  `jupyter nbconvert --to notebook --execute src/lab1.ipynb --output out_exec_lab1.ipynb --output-dir src`.
+- Или откройте `MOEL/Lab1/src/lab1.ipynb` и выполните Run All.
+- Завершение: `Dev Containers: Close Remote`.
+
 **Использование и примеры**
 - В тетрадке:
   - Чтение `data/train.csv`/`data/test.csv`, фильтрация,

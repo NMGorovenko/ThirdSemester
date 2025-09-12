@@ -28,6 +28,16 @@
 
 Примечание: состав контейнера и автокоманды см. в `MOEL/README.md`.
 
+**Альтернатива: локально в Dev Container (VS Code)**
+- Зачем: такое же готовое окружение, как в Codespaces, без локальной установки SDK.
+- Требуется: Docker Desktop, VS Code, расширение `Dev Containers`.
+- Откройте репозиторий в VS Code и выберите `Reopen in Container`.
+- Подождите 1–2 минуты, пока завершится настройка контейнера.
+- Терминал в контейнере: `cd MOEL/Lab2` и выполните
+  `jupyter nbconvert --to notebook --execute src/lab2.ipynb --output out_exec_lab2.ipynb --output-dir src`.
+- Или откройте `MOEL/Lab2/src/lab2.ipynb` и выполните Run All.
+- Завершение: `Dev Containers: Close Remote`.
+
 **Использование и примеры результатов**
 - Тетрадка печатает:
   - Размерности TF‑IDF и разреженность,
