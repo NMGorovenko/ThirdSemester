@@ -9,34 +9,21 @@
 - `src/lab1.ipynb` — основная .NET (C#) тетрадка.
 - `data/` — CSV (Git LFS).
 
-**Требования**
-- .NET SDK 8.0+
-- JupyterLab и .NET Interactive kernel (или VS Code + Polyglot Notebook)
-- Git LFS
+**Запуск (рекомендуется) — GitHub Codespaces**
+- Откройте репозиторий на GitHub и нажмите `Code → Codespaces → Create codespace on develop`.
+- ![Скрин: запуск Codespaces](../../docs/images/codespaces-create.png)
+- После подготовки окружения всё уже установлено: .NET SDK, JupyterLab/nbconvert, .NET Interactive, Git LFS. Датасеты подтянутся автоматически (в контейнере выполняется `git lfs pull`).
+- После старта контейнера откройте терминал и перейдите в папку работы: `cd MOEL/Lab1`.
+- Выполните тетрадку через CLI:
+  - `jupyter nbconvert --to notebook --execute src/lab1.ipynb --output out_exec_lab1.ipynb --output-dir src`
+  - Итоговый файл: `MOEL/Lab1/src/out_exec_lab1.ipynb`.
+- Либо откройте `MOEL/Lab1/src/lab1.ipynb` и нажмите Run All (kernel “.NET (C#)” уже настроен).
 
-**Установка (macOS)**
-- `brew install git git-lfs dotnet jupyterlab`
-- `git lfs install`
-- `git lfs pull`
-- Kernel: `dotnet tool update -g Microsoft.dotnet-interactive && ~/.dotnet/tools/dotnet-interactive jupyter install`
+**Важно — выключайте Codespace после работы**
+- У бесплатных и PRO (Education) тарифов есть лимиты. Чтобы не тратить минуты, отключайте рабочее пространство: `Code → Codespaces → … → Stop codespace`.
+- ![Скрин: как выключить Codespace](../../docs/images/codespaces-stop.png)
 
-**Установка (Ubuntu 22.04)**
-- .NET 9 SDK: - можно скачать с сайта sdk https://dotnet.microsoft.com/en-us/download/dotnet/9.0
-  - `sudo apt-get update && sudo apt-get install -y wget apt-transport-https`
-  - `wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb`
-  - `sudo dpkg -i packages-microsoft-prod.deb && rm packages-microsoft-prod.deb`
-  - `sudo apt-get update && sudo apt-get install -y dotnet-sdk-0.0`
-- Jupyter: `sudo apt-get install -y python3-pip && pip3 install --user jupyterlab`
-- Git LFS: `sudo apt-get install -y git-lfs && git lfs install`
-- Клонирование и данные: `git lfs pull`
-- Kernel (https://github.com/dotnet/interactive/blob/main/docs/NotebookswithJupyter.md): `dotnet tool update -g Microsoft.dotnet-interactive && dotnet interactive jupyter install`
-
-**Запуск**
-- CLI (без IDE):
-  - `jupyter nbconvert --to notebook --execute Lab1/src/lab1.ipynb --output out_exec_lab1.ipynb --output-dir Lab1/src`
-  - Откройте `Lab1/src/out_exec_lab1.ipynb` для графиков и результатов.
-- VS Code + Polyglot:
-  - Откройте `Lab1/src/lab1.ipynb`, выберите kernel “.NET (C#)”, Run All.
+Примечание: состав контейнера и автокоманды см. в `MOEL/README.md` (разделы “Состав devcontainer” и “Что автоматически выполняется”).
 
 **Использование и примеры**
 - В тетрадке:
@@ -82,4 +69,3 @@ transformed sentence: soooooo wish but im school myspace complete block
 label: -1
 model prediction: negative
 ```
-
