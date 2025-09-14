@@ -1,0 +1,27 @@
+# Postgres with JSON diff C extension
+FROM postgres:16
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Build deps for PGXS C extension
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential clang make pkg-config \
+        ca-certificates curl gnupg lsb-release locales \
+        libglib2.0-dev libicu-dev libssl-dev zlib1g-dev \
+        postgresql-server-dev-16 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Build and install our C extension
+COPY ext/jsondiff /usr/local/src/jsondiff
+RUN set -eux; \
+    cd /usr/local/src/jsondiff; \
+    make -j"$(nproc)"; \
+    make install; \
+    cd / && rm -rf /usr/local/src/jsondiff
+
+# Locale (nice to have)
+ENV LANG en_US.utf8
+RUN sed -i 's/# en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen && locale-gen
+
+# Postgres entrypoint will run init scripts from /docker-entrypoint-initdb.d
