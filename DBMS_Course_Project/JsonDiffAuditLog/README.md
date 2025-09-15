@@ -103,8 +103,22 @@ DBMS_Course_Project/JsonDiffAuditLog/
 
 ## Как это работает
 
-- AFTER‑триггеры читают JSON из столбца `data` (`OLD.data`/`NEW.data`), вызывают C‑функцию `compute_json_diff` и записывают строку в `audit_log`.
+- AFTER‑триггеры вызывают `public.audit_generic_trigger` и записывают строку в `audit_log`.
+- Режимы работы триггера:
+  - Только JSON‑колонка: передайте аргумент `jsoncol=<имя_колонки>` и список PK‑колонок. Пример: для `items` — `EXECUTE FUNCTION public.audit_generic_trigger('jsoncol=data', 'id')`. Diff содержит изменения внутри JSON‑поля (верхний уровень объекта).
+  - Вся строка: не передавайте `jsoncol`, а перечислите PK‑колонки. Пример: `EXECUTE FUNCTION public.audit_generic_trigger('id')`. Diff формируется по всем столбцам строки (поверхностно, по именам столбцов).
 - Diff хранит только изменения (`set`/`unset`); при сборке снимка `set` сливается через JSON‑объединение, а ключи из `unset` удаляются.
+
+### Подключение новой таблицы
+
+- Создайте триггер для нужной таблицы, указав PK‑колонки и при необходимости JSON‑колонку:
+  - Только JSON‑колонка: `CREATE TRIGGER tr_audit_<tbl> AFTER INSERT OR UPDATE OR DELETE ON <schema>.<tbl> FOR EACH ROW EXECUTE FUNCTION public.audit_generic_trigger('jsoncol=<json_col>', '<pk1>'[, '<pk2>', ...]);`
+  - Вся строка: `CREATE TRIGGER tr_audit_<tbl> AFTER INSERT OR UPDATE OR DELETE ON <schema>.<tbl> FOR EACH ROW EXECUTE FUNCTION public.audit_generic_trigger('<pk1>'[, '<pk2>', ...]);`
+- Не включайте аудит «всех» таблиц — журнал быстро разрастётся. Подключайте выборочно бизнес‑критичные таблицы.
+
+### INSERT и diff
+
+- Для `INSERT` дифф формируется как полный `set` по новым значениям (а `unset` пустой), чтобы история была единообразной.
 
 ## Альтернативы
 
