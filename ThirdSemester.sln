@@ -1,0 +1,45 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DBMS_Course_Project", "DBMS_Course_Project", "{F96FB329-F1D1-8F7F-C0EC-952E8A12CC53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JsonDiffAuditLog", "JsonDiffAuditLog", "{4D46032F-14DF-404B-4447-127848E0F667}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4319E305-A59C-A93A-6F46-746537B2AD72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "DBMS_Course_Project\JsonDiffAuditLog\tests\IntegrationTests\IntegrationTests.csproj", "{9721A3AF-E989-1C3E-3265-95A7D001703E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{61859F9E-6C51-9C65-E629-90EA85988D35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoApp", "DBMS_Course_Project\JsonDiffAuditLog\src\DemoApp\DemoApp.csproj", "{E22B45F6-7761-38E5-E1ED-A4B8C0C90E4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9721A3AF-E989-1C3E-3265-95A7D001703E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9721A3AF-E989-1C3E-3265-95A7D001703E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9721A3AF-E989-1C3E-3265-95A7D001703E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9721A3AF-E989-1C3E-3265-95A7D001703E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E22B45F6-7761-38E5-E1ED-A4B8C0C90E4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E22B45F6-7761-38E5-E1ED-A4B8C0C90E4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E22B45F6-7761-38E5-E1ED-A4B8C0C90E4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E22B45F6-7761-38E5-E1ED-A4B8C0C90E4C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4D46032F-14DF-404B-4447-127848E0F667} = {F96FB329-F1D1-8F7F-C0EC-952E8A12CC53}
+		{4319E305-A59C-A93A-6F46-746537B2AD72} = {4D46032F-14DF-404B-4447-127848E0F667}
+		{9721A3AF-E989-1C3E-3265-95A7D001703E} = {4319E305-A59C-A93A-6F46-746537B2AD72}
+		{61859F9E-6C51-9C65-E629-90EA85988D35} = {4D46032F-14DF-404B-4447-127848E0F667}
+		{E22B45F6-7761-38E5-E1ED-A4B8C0C90E4C} = {61859F9E-6C51-9C65-E629-90EA85988D35}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A5F60528-5893-4F1B-A9DA-0101F9B6771D}
+	EndGlobalSection
+EndGlobal
