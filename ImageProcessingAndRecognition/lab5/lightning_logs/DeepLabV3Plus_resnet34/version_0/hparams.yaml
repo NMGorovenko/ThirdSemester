@@ -1,0 +1,3 @@
+arch_name: DeepLabV3Plus
+encoder_name: resnet34
+learning_rate: 0.0001
