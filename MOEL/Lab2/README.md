@@ -25,7 +25,6 @@
 - У бесплатных и PRO (Education) тарифов есть лимиты. Чтобы не тратить минуты, отключайте рабочее пространство: `Code → Codespaces → … → Stop codespace`.
 - ![Скрин: как выключить Codespace](../../docs/images/codespaces-stop.png)
 
-
 Примечание: состав контейнера и автокоманды см. в `MOEL/README.md`.
 
 **Альтернатива: локально в Dev Container (VS Code)**

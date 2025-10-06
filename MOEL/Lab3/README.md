@@ -10,11 +10,21 @@
 
 ## Сборка и развертывание
 ### Вариант 1 — GitHub Codespaces (рекомендуется)
-1. На GitHub откройте репозиторий и выберите `Code → Codespaces → Create codespace on develop`.
-2. Дождитесь выполнения postCreate/postStart (≈1–2 минуты). Среда уже содержит .NET SDK, Jupyter, Git LFS.
-3. В терминале Codespaces выполните `cd MOEL/Lab3`.
-4. Для подготовки среды ничего дополнительно собирать не нужно: `dotnet` пакеты подтягиваются напрямую в ноутбуке через директивы `#r`.
-5. После работы выключайте Codespace, чтобы не расходовать квоту (`Code → Codespaces → … → Stop codespace`).
+- Откройте репозиторий на GitHub и нажмите `Code → Codespaces → Create codespace on develop`.
+- ![Скрин: запуск Codespaces](../../docs/images/codespaces-create.png)
+- После подготовки окружения всё уже установлено: .NET SDK, JupyterLab/nbconvert, .NET Interactive, Git LFS. Датасеты подтянутся автоматически.
+- Важно: после старта Codespace подождите 1–2 минуты — устанавливаются расширения и выполняются скрипты postCreate/postStart; первые попытки запуска могут ещё не сработать.
+- В терминале перейдите в папку работы: `cd MOEL/Lab3`.
+- Выполните тетрадку через CLI:
+  - `jupyter nbconvert --to notebook --execute src/lab3.ipynb --output out_exec_lab3.ipynb --output-dir src`
+  - Результирующий файл: `MOEL/Lab3/src/out_exec_lab3.ipynb`.
+- Либо откройте `MOEL/Lab3/src/lab3.ipynb` и нажмите Run All (kernel “.NET (C#)” уже настроен).
+
+**Важно — выключайте Codespace после работы**
+- У бесплатных и PRO (Education) тарифов есть лимиты. Чтобы не тратить минуты, отключайте рабочее пространство: `Code → Codespaces → … → Stop codespace`.
+- ![Скрин: как выключить Codespace](../../docs/images/codespaces-stop.png)
+
+Примечание: состав контейнера и автокоманды см. в `MOEL/README.md`.
 
 ### Вариант 2 — локально в Dev Container (VS Code)
 1. Подготовьте окружение: Docker Desktop, VS Code, расширение `Dev Containers`.
