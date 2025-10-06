@@ -2,12 +2,6 @@
 
 Лабораторная работа расширяет решения из ЛР2: на тех же размеченных твитах обучаются три семантических анализатора (LSA, Word2Vec, Doc2Vec), строится их сравнение и демонстрация на пользовательских данных.
 
-## Требования
-- .NET 7 SDK или новее
-- Jupyter Notebook (>=6.5) с установленным `dotnet-interactive`
-- Git LFS (для загрузки train/test датасетов)
-- Docker Desktop + VS Code (для сценария с dev container)
-
 ## Сборка и развертывание
 ### Вариант 1 — GitHub Codespaces (рекомендуется)
 - Откройте репозиторий на GitHub и нажмите `Code → Codespaces → Create codespace on develop`.
