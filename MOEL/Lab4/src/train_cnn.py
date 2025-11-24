@@ -15,15 +15,17 @@ TEST_CSV  = DATA_DIR / 'test.csv'
 def normalize(s: str) -> str:
     s = s.lower()
     s = re.sub(r'https?://\S+', ' ', s)
-    s = re.sub(r'["\' + "'" + r'`]+', '', s)
-    s = re.sub(r'[^\p{L}\p{Nd}#@ ]+', ' ', s)
+    # удалить кавычки и апострофы
+    s = re.sub(r'["\'`]+', '', s)
+    # оставить только латинские буквы/цифры, #, @ и пробелы
+    s = re.sub(r'[^0-9a-z#@ ]+', ' ', s)
     s = re.sub(r'\s+', ' ', s).strip()
     return s
 
 def read_csv_train(path: Path):
     import csv
     rows = []
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, 'r', encoding='utf-8', errors='ignore') as f:
         r = csv.DictReader(f)
         for row in r:
             t = row.get('text') or ''
@@ -36,7 +38,7 @@ def read_csv_train(path: Path):
 def read_csv_test(path: Path):
     import csv
     rows = []
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, 'r', encoding='utf-8', errors='ignore') as f:
         r = csv.DictReader(f)
         for row in r:
             t = row.get('text') or ''
@@ -145,4 +147,3 @@ torch.onnx.export(
     opset_version=13
 )
 print(f'Exported ONNX to {onnx_path}')
-
