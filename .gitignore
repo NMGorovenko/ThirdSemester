@@ -126,6 +126,10 @@ ENV/
 env.bak/
 venv.bak/
 
+# Python bytecode
+__pycache__/
+*.py[cod]
+
 # mypy
 .mypy_cache/
 .dmypy.json
