@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Lab6.TelegramBot.Chat;
 using Lab6.TelegramBot.Knowledge;
 using Lab6.TelegramBot.Options;
 using Microsoft.Extensions.Logging;
@@ -17,22 +18,25 @@ public class YandexGptChatGenerator : IChatGenerator
     private readonly IOptions<YandexGptOptions> _options;
     private readonly ILogger<YandexGptChatGenerator> _logger;
     private readonly ThesisContextProvider _thesisContextProvider;
+    private readonly IChatContextStore _chatContextStore;
 
     public YandexGptChatGenerator(
         HttpClient httpClient,
         IOptions<YandexGptOptions> options,
         ILogger<YandexGptChatGenerator> logger,
-        ThesisContextProvider thesisContextProvider)
+        ThesisContextProvider thesisContextProvider,
+        IChatContextStore chatContextStore)
     {
         _httpClient = httpClient;
         _options = options;
         _logger = logger;
         _thesisContextProvider = thesisContextProvider;
+        _chatContextStore = chatContextStore;
     }
 
     public string Mode => "gpt";
 
-    public async Task<string> GenerateAsync(string userMessage, CancellationToken cancellationToken = default)
+    public async Task<string> GenerateAsync(long chatId, string userMessage, CancellationToken cancellationToken = default)
     {
         var opts = _options.Value;
 
@@ -68,6 +72,25 @@ public class YandexGptChatGenerator : IChatGenerator
                 ? systemPromptBase
                 : $"{systemPromptBase}\n\nКонтекст магистерской работы пользователя:\n{thesisContext}\n\nОтвечай, опираясь на этот контекст. Если информации не хватает, отвечай честно, что данных недостаточно.";
 
+            // Собираем историю чата за последние 30 минут (см. ChatContextStore: TTL)
+            var history = _chatContextStore.GetHistory(chatId);
+
+            var messages = new List<object>
+            {
+                new { role = "system", text = systemPrompt }
+            };
+
+            // История: user/assistant обмены до текущего сообщения
+            foreach (var m in history)
+            {
+                // На всякий случай нормализуем роли
+                var role = m.Role is "user" or "assistant" ? m.Role : "user";
+                messages.Add(new { role, text = m.Text });
+            }
+
+            // Текущее сообщение пользователя
+            messages.Add(new { role = "user", text = userMessage });
+
             var requestBody = new
             {
                 modelUri = opts.Model,
@@ -77,11 +100,7 @@ public class YandexGptChatGenerator : IChatGenerator
                     temperature = 0.4,
                     maxTokens = 400
                 },
-                messages = new[]
-                {
-                    new { role = "system", text = systemPrompt },
-                    new { role = "user", text = userMessage }
-                }
+                messages
             };
 
             // HttpClient уже сконфигурирован в Program.cs (BaseAddress + Bearer Auth),

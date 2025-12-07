@@ -1,4 +1,5 @@
 using Lab6.TelegramBot.Generation;
+using Lab6.TelegramBot.Chat;
 using Lab6.TelegramBot.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -19,18 +20,19 @@ public class TelegramBotHostedService : BackgroundService
     private readonly ILogger<TelegramBotHostedService> _logger;
     private readonly TelegramOptions _telegramOptions;
     private readonly IChatGeneratorResolver _resolver;
+    private readonly IChatContextStore _chatContextStore;
     private TelegramBotClient? _botClient;
 
     public TelegramBotHostedService(
         ILogger<TelegramBotHostedService> logger,
         IOptions<TelegramOptions> telegramOptions,
         IChatGeneratorResolver resolver,
-        IConfiguration cfg)
+        IChatContextStore chatContextStore)
     {
         _logger = logger;
         _telegramOptions = telegramOptions.Value;
         _resolver = resolver;
-        var cfg1 = cfg;
+        _chatContextStore = chatContextStore;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -111,7 +113,13 @@ public class TelegramBotHostedService : BackgroundService
         _chatModes.TryGetValue(chatId, out var mode);
         var generator = _resolver.Resolve(mode);
 
-        var reply = await generator.GenerateAsync(text, cancellationToken);
+        // сначала генерируем ответ, затем добавляем в историю пару (user, assistant),
+        // чтобы текущий вопрос не дублировался в history при формировании промпта
+        var reply = await generator.GenerateAsync(chatId, text, cancellationToken);
+
+        _chatContextStore.Append(chatId, "user", text);
+        _chatContextStore.Append(chatId, "assistant", reply);
+
         await botClient.SendMessage(chatId, reply, cancellationToken: cancellationToken);
     }
 

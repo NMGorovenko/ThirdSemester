@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using Lab6.TelegramBot;
 using Lab6.TelegramBot.Generation;
+using Lab6.TelegramBot.Chat;
 using Lab6.TelegramBot.Knowledge;
 using Lab6.TelegramBot.Options;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,7 @@ builder.Services.Configure<TelegramOptions>(builder.Configuration.GetSection("Te
 builder.Services.Configure<YandexGptOptions>(builder.Configuration.GetSection("YandexGpt"));
 
 builder.Services.AddSingleton<ThesisContextProvider>();
+builder.Services.AddSingleton<IChatContextStore, ChatContextStore>();
 
 // YandexGPT generator (typed HttpClient)
 builder.Services.AddHttpClient<IChatGenerator, YandexGptChatGenerator>((sp, client) =>

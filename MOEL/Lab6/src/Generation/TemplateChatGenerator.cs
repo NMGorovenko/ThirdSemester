@@ -32,7 +32,7 @@ public class TemplateChatGenerator : IChatGenerator
 
     public string Mode => "template";
 
-    public Task<string> GenerateAsync(string userMessage, CancellationToken cancellationToken = default)
+    public Task<string> GenerateAsync(long chatId, string userMessage, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(userMessage))
         {
@@ -70,4 +70,3 @@ public class TemplateChatGenerator : IChatGenerator
         return NeutralTemplates;
     }
 }
-

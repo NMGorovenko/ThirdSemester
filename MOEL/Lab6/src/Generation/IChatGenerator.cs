@@ -11,8 +11,7 @@ public interface IChatGenerator
     string Mode { get; }
 
     /// <summary>
-    /// Generate a reply for a user message.
+    /// Generate a reply for a user message in a specific chat.
     /// </summary>
-    Task<string> GenerateAsync(string userMessage, CancellationToken cancellationToken = default);
+    Task<string> GenerateAsync(long chatId, string userMessage, CancellationToken cancellationToken = default);
 }
-
