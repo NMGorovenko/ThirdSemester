@@ -1,0 +1,64 @@
+name: Deploy Lab6 bot to VPS
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag of the Docker image (optional if workflow is started from tag)'
+        required: false
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+        
+      - name: Determine version
+        id: get_version
+        run: |
+            echo "GITHUB_REF=${GITHUB_REF}"
+            if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+              TAG_VERSION="${GITHUB_REF#refs/tags/}"
+              echo "Detected tag: $TAG_VERSION"
+              echo "version=$TAG_VERSION" >> "$GITHUB_OUTPUT"
+            elif [ -n "${{ inputs.version }}" ]; then
+              echo "Using manually entered version: ${{ inputs.version }}"
+              echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+            else
+              echo "Error: Version not specified and not running from tag."
+              exit 1
+            fi
+
+      - name: Deploy Docker container on VPS
+        env:
+          IMAGE_VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/moel-lab6-bot:${IMAGE_VERSION}"
+
+          echo "Deploying image $IMAGE to VPS..."
+
+          sshpass -p "${{ secrets.HOSTING_ROOT_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.HOSTING_USER }}@${{ secrets.HOSTING_IP }} << EOF
+echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+docker pull $IMAGE
+
+docker stop moel-lab6-bot || true
+docker rm moel-lab6-bot || true
+
+docker run -d \
+  --name moel-lab6-bot \
+  --restart unless-stopped \
+  -e DOTNET_ENVIRONMENT=Production \
+  -e TELEGRAM__TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
+  -e TELEGRAM__DEFAULTMODE="gpt" \
+  -e YANDEXGPT__APIKEY="${{ secrets.YANDEXGPT_APIKEY }}" \
+  -e YANDEXGPT__ENDPOINT="${{ secrets.YANDEXGPT_ENDPOINT }}" \
+  -e YANDEXGPT__MODEL="${{ secrets.YANDEXGPT_MODEL }}" \
+  $IMAGE
+EOF
