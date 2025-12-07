@@ -5,14 +5,13 @@ using Lab6.TelegramBot.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 // Configuration: appsettings.json + appsettings.{Environment}.json + environment variables
 builder.Configuration
-    .SetBasePath(Directory.GetCurrentDirectory())
+    .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();
@@ -20,7 +19,8 @@ builder.Configuration
 builder.Services.Configure<TelegramOptions>(builder.Configuration.GetSection("Telegram"));
 builder.Services.Configure<YandexGptOptions>(builder.Configuration.GetSection("YandexGpt"));
 
-builder.Services.AddHttpClient<YandexGptChatGenerator>((sp, client) =>
+// YandexGPT generator (typed HttpClient)
+builder.Services.AddHttpClient<IChatGenerator, YandexGptChatGenerator>((sp, client) =>
 {
     var opts = sp.GetRequiredService<IOptions<YandexGptOptions>>().Value;
 
@@ -38,7 +38,8 @@ builder.Services.AddHttpClient<YandexGptChatGenerator>((sp, client) =>
     }
 });
 
-builder.Services.AddSingleton<TemplateChatGenerator>();
+// Template generator
+builder.Services.AddSingleton<IChatGenerator, TemplateChatGenerator>();
 builder.Services.AddSingleton<IChatGeneratorResolver, ChatGeneratorResolver>();
 
 builder.Services.AddHostedService<TelegramBotHostedService>();

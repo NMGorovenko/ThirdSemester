@@ -1,5 +1,6 @@
 using Lab6.TelegramBot.Generation;
 using Lab6.TelegramBot.Options;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -23,11 +24,13 @@ public class TelegramBotHostedService : BackgroundService
     public TelegramBotHostedService(
         ILogger<TelegramBotHostedService> logger,
         IOptions<TelegramOptions> telegramOptions,
-        IChatGeneratorResolver resolver)
+        IChatGeneratorResolver resolver,
+        IConfiguration cfg)
     {
         _logger = logger;
         _telegramOptions = telegramOptions.Value;
         _resolver = resolver;
+        var cfg1 = cfg;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
