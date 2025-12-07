@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Lab6.TelegramBot.Knowledge;
 using Lab6.TelegramBot.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,12 +16,18 @@ public class YandexGptChatGenerator : IChatGenerator
     private readonly HttpClient _httpClient;
     private readonly IOptions<YandexGptOptions> _options;
     private readonly ILogger<YandexGptChatGenerator> _logger;
+    private readonly ThesisContextProvider _thesisContextProvider;
 
-    public YandexGptChatGenerator(HttpClient httpClient, IOptions<YandexGptOptions> options, ILogger<YandexGptChatGenerator> logger)
+    public YandexGptChatGenerator(
+        HttpClient httpClient,
+        IOptions<YandexGptOptions> options,
+        ILogger<YandexGptChatGenerator> logger,
+        ThesisContextProvider thesisContextProvider)
     {
         _httpClient = httpClient;
         _options = options;
         _logger = logger;
+        _thesisContextProvider = thesisContextProvider;
     }
 
     public string Mode => "gpt";
@@ -37,9 +44,29 @@ public class YandexGptChatGenerator : IChatGenerator
 
         try
         {
-            var systemPrompt = string.IsNullOrWhiteSpace(opts.SystemPrompt)
-                ? "Ты диалоговый помощник, который отвечает на вопросы по теме магистерской работы пользователя. Пиши по-русски, кратко и по делу."
-                : opts.SystemPrompt;
+            // 1) Берём BASE.md как основной системный промпт, если он заполнен.
+            var basePromptFromFiles = _thesisContextProvider.GetBasePrompt();
+
+            string systemPromptBase;
+            if (!string.IsNullOrWhiteSpace(basePromptFromFiles))
+            {
+                systemPromptBase = basePromptFromFiles!;
+            }
+            else if (!string.IsNullOrWhiteSpace(opts.SystemPrompt))
+            {
+                systemPromptBase = opts.SystemPrompt!;
+            }
+            else
+            {
+                systemPromptBase =
+                    "Ты диалоговый помощник, который отвечает на вопросы по теме магистерской работы пользователя. Пиши по-русски, кратко и по делу.";
+            }
+
+            var thesisContext = _thesisContextProvider.GetContext();
+
+            var systemPrompt = string.IsNullOrWhiteSpace(thesisContext)
+                ? systemPromptBase
+                : $"{systemPromptBase}\n\nКонтекст магистерской работы пользователя:\n{thesisContext}\n\nОтвечай, опираясь на этот контекст. Если информации не хватает, отвечай честно, что данных недостаточно.";
 
             var requestBody = new
             {
