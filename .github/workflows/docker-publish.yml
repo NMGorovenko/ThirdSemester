@@ -32,5 +32,5 @@ jobs:
           file: ./MOEL/Lab6/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/moel-lab6-bot:${{ steps.get_version.outputs.VERSION }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/moel-lab6-bot:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/moel-gorovenko-lab6:${{ steps.get_version.outputs.VERSION }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/moel-gorovenko-lab6:latest
