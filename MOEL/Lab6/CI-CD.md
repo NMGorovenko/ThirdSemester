@@ -18,12 +18,12 @@
 3. Срабатывает workflow `docker-publish.yml`:
    - собирает образ из `MOEL/Lab6/Dockerfile`;
    - пушит в Docker Hub:
-     - `${DOCKERHUB_USERNAME}/moel-lab6-bot:lab6-v1.0.0`
-     - `${DOCKERHUB_USERNAME}/moel-lab6-bot:latest`.
+     - `${DOCKERHUB_USERNAME}/moel-gorovenko-lab6:lab6-v1.0.0`
+     - `${DOCKERHUB_USERNAME}/moel-gorovenko-lab6:latest`.
 4. Вручную запускаем `deploy-to-vps.yml` (через вкладку Actions):
    - либо без указания версии (если запуск из тега);
    - либо с явным `version`, например `lab6-v1.0.0`.
-5. Workflow логинится на VPS, делает `docker pull`, останавливает старый контейнер и стартует новый `moel-lab6-bot` с нужными переменными окружения (токен Telegram, ключ YandexGPT и т.п.).
+5. Workflow логинится на VPS, делает `docker pull`, останавливает старый контейнер и стартует новый `moel-gorovenko-lab6` с нужными переменными окружения (токен Telegram, ключ YandexGPT и т.п.).
 
 ## Набор GitHub Secrets
 
@@ -37,7 +37,7 @@
 - `DOCKERHUB_USERNAME`
   - **Что это:** логин вашего аккаунта Docker Hub.
   - **Где используется:** для логина в Docker Hub и формирования имени образа:
-    - `${{ secrets.DOCKERHUB_USERNAME }}/moel-lab6-bot:...`
+    - `${{ secrets.DOCKERHUB_USERNAME }}/moel-gorovenko-lab6:...`
   - **Зачем нужен:** чтобы пушить и потом тянуть образ бота.
 
 - `DOCKERHUB_TOKEN`
@@ -117,8 +117,8 @@
      - `file: ./MOEL/Lab6/Dockerfile`
      - `push: true`
      - `tags`:
-       - `${DOCKERHUB_USERNAME}/moel-lab6-bot:${VERSION}`
-       - `${DOCKERHUB_USERNAME}/moel-lab6-bot:latest`
+       - `${DOCKERHUB_USERNAME}/moel-gorovenko-lab6:${VERSION}`
+       - `${DOCKERHUB_USERNAME}/moel-gorovenko-lab6:latest`
 
 Итог: после успешного прохода workflow в Docker Hub доступны как конкретная версия, так и тег `latest` бота.
 
@@ -140,15 +140,15 @@
    - иначе workflow падает с ошибкой — нужно указать версию.
 4. **Деплой контейнера на VPS:**
    - Формируется имя образа:
-     - `IMAGE="${DOCKERHUB_USERNAME}/moel-lab6-bot:${version}"`.
+     - `IMAGE="${DOCKERHUB_USERNAME}/moel-gorovenko-lab6:${version}"`.
    - По SSH выполняются команды:
      1. `docker login` в Docker Hub через `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN`.
      2. `docker pull` нужной версии образа.
      3. Остановка и удаление старого контейнера:
-        - `docker stop moel-lab6-bot || true`
-        - `docker rm moel-lab6-bot || true`
+        - `docker stop moel-gorovenko-lab6 || true`
+        - `docker rm moel-gorovenko-lab6 || true`
      4. Запуск нового контейнера:
-        - имя: `moel-lab6-bot`
+        - имя: `moel-gorovenko-lab6`
         - перезапуск: `--restart unless-stopped`
         - окружение:
           - `DOTNET_ENVIRONMENT=Production`
@@ -157,7 +157,7 @@
           - `YANDEXGPT__APIKEY=${YANDEXGPT_APIKEY}`
           - `YANDEXGPT__ENDPOINT=${YANDEXGPT_ENDPOINT}`
           - `YANDEXGPT__MODEL=${YANDEXGPT_MODEL}`
-        - образ: `${DOCKERHUB_USERNAME}/moel-lab6-bot:${version}`
+        - образ: `${DOCKERHUB_USERNAME}/moel-gorovenko-lab6:${version}`
 
 ## Как релизить бота “от начала до конца”
 
@@ -187,7 +187,7 @@ git push origin lab6-v1.0.0
 
 ```bash
 ssh HOSTING_USER@HOSTING_IP
-docker logs -f moel-lab6-bot
+docker logs -f moel-gorovenko-lab6
 ```
 
 6. **Протестировать бота в Telegram:**

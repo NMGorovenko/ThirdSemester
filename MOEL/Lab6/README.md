@@ -156,7 +156,7 @@ dotnet run --configuration Release
 
 ```bash
 cd MOEL
-docker build -f Lab6/Dockerfile -t moel-lab6-bot .
+docker build -f Lab6/Dockerfile -t moel-gorovenko-lab6 .
 ```
 
 Проверка образа локально:
@@ -168,7 +168,7 @@ docker run --rm \
   -e YANDEXGPT__APIKEY="yc1...." \
   -e YANDEXGPT__ENDPOINT="https://llm.api.cloud.yandex.net/foundationModels/v1/" \
   -e YANDEXGPT__MODEL="gpt://<folder-id>/yandexgpt-lite" \
-  moel-lab6-bot
+  moel-gorovenko-lab6
 ```
 
 Контейнер не открывает порты (бот работает по исходящим HTTP + Telegram), поэтому никаких `-p` пробросов не требуется.
@@ -187,33 +187,33 @@ docker run --rm \
 2. Собрать образ (можно на сервере, а можно заранее и загрузить в Docker Registry):
 
    ```bash
-   docker build -f Lab6/Dockerfile -t moel-lab6-bot .
+   docker build -f Lab6/Dockerfile -t moel-gorovenko-lab6 .
    ```
 
 3. Запустить контейнер в фоне с автоматическим рестартом:
 
    ```bash
    docker run -d \
-     --name moel-lab6-bot \
+     --name moel-gorovenko-lab6 \
      --restart unless-stopped \
      -e TELEGRAM__TOKEN="1234567890:AA..." \
      -e TELEGRAM__DEFAULTMODE="gpt" \
      -e YANDEXGPT__APIKEY="yc1...." \
      -e YANDEXGPT__ENDPOINT="https://llm.api.cloud.yandex.net/foundationModels/v1/completion" \
      -e YANDEXGPT__MODEL="gpt://<folder-id>/yandexgpt-lite" \
-     moel-lab6-bot
+     moel-gorovenko-lab6
    ```
 
 4. Проверить логи:
 
    ```bash
-   docker logs -f moel-lab6-bot
+   docker logs -f moel-gorovenko-lab6
    ```
 
    В логах должны появиться сообщения о запуске бота и обработке входящих сообщений.
 
 Альтернатива без Docker — запуск через `systemd`:
-- создать unit‑файл `moel-lab6-bot.service`, который запускает `dotnet Lab6.TelegramBot.dll` из опубликованной директории;
+- создать unit‑файл `moel-gorovenko-lab6.service`, который запускает `dotnet Lab6.TelegramBot.dll` из опубликованной директории;
 - передать секреты через `Environment=` / `EnvironmentFile=`.
 
 ## Режимы генерации и сравнение

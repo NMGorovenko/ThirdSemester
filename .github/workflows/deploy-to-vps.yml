@@ -39,7 +39,7 @@ jobs:
         env:
           IMAGE_VERSION: ${{ steps.get_version.outputs.version }}
         run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/moel-lab6-bot:${IMAGE_VERSION}"
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/moel-gorovenko-lab6:${IMAGE_VERSION}"
 
           echo "Deploying image $IMAGE to VPS..."
 
@@ -48,11 +48,11 @@ echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_U
 
 docker pull $IMAGE
 
-docker stop moel-lab6-bot || true
-docker rm moel-lab6-bot || true
+docker stop moel-gorovenko-lab6 || true
+docker rm moel-gorovenko-lab6 || true
 
 docker run -d \
-  --name moel-lab6-bot \
+  --name moel-gorovenko-lab6 \
   --restart unless-stopped \
   -e DOTNET_ENVIRONMENT=Production \
   -e TELEGRAM__TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
