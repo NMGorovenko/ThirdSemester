@@ -44,21 +44,21 @@ jobs:
           echo "Deploying image $IMAGE to VPS..."
 
           sshpass -p "${{ secrets.HOSTING_ROOT_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.HOSTING_USER }}@${{ secrets.HOSTING_IP }} << EOF
-echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-docker pull $IMAGE
+            docker pull $IMAGE
 
-docker stop moel-gorovenko-lab6 || true
-docker rm moel-gorovenko-lab6 || true
+            docker stop moel-gorovenko-lab6 || true
+            docker rm moel-gorovenko-lab6 || true
 
-docker run -d \
-  --name moel-gorovenko-lab6 \
-  --restart unless-stopped \
-  -e DOTNET_ENVIRONMENT=Production \
-  -e TELEGRAM__TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
-  -e TELEGRAM__DEFAULTMODE="gpt" \
-  -e YANDEXGPT__APIKEY="${{ secrets.YANDEXGPT_APIKEY }}" \
-  -e YANDEXGPT__ENDPOINT="${{ secrets.YANDEXGPT_ENDPOINT }}" \
-  -e YANDEXGPT__MODEL="${{ secrets.YANDEXGPT_MODEL }}" \
-  $IMAGE
-EOF
+            docker run -d \
+              --name moel-gorovenko-lab6 \
+              --restart unless-stopped \
+              -e DOTNET_ENVIRONMENT=Production \
+              -e TELEGRAM__TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
+              -e TELEGRAM__DEFAULTMODE="gpt" \
+              -e YANDEXGPT__APIKEY="${{ secrets.YANDEXGPT_APIKEY }}" \
+              -e YANDEXGPT__ENDPOINT="${{ secrets.YANDEXGPT_ENDPOINT }}" \
+              -e YANDEXGPT__MODEL="${{ secrets.YANDEXGPT_MODEL }}" \
+              $IMAGE
+          EOF
