@@ -73,23 +73,20 @@ public class TelegramBotHostedService : BackgroundService
 
         var chatId = message.Chat.Id;
         var text = message.Text.Trim();
+        var command = GetCommand(text);
 
         _logger.LogInformation("Received message from chat {ChatId}: {Text}", chatId, text);
 
-        if (text.StartsWith("/start", StringComparison.OrdinalIgnoreCase))
+        if (command is "/start" or "/help")
         {
             await botClient.SendMessage(
                 chatId,
-                "Привет! Я бот для 6‑й лабораторной по МОЭЛ.\n" +
-                "Я умею отвечать на вопросы по теме магистерской работы двумя способами:\n" +
-                "1) через YandexGPT (режим /mode_gpt)\n" +
-                "2) через генерацию по шаблонам (режим /mode_template)\n\n" +
-                "Просто напишите вопрос, а я попробую ответить.",
+                BuildHelpMessage(chatId),
                 cancellationToken: cancellationToken);
             return;
         }
 
-        if (text.Equals("/mode_gpt", StringComparison.OrdinalIgnoreCase))
+        if (command == "/mode_gpt")
         {
             await botClient.SendMessage(
                 chatId,
@@ -99,7 +96,7 @@ public class TelegramBotHostedService : BackgroundService
             return;
         }
 
-        if (text.Equals("/mode_template", StringComparison.OrdinalIgnoreCase))
+        if (command == "/mode_template")
         {
             await botClient.SendMessage(
                 chatId,
@@ -131,4 +128,36 @@ public class TelegramBotHostedService : BackgroundService
 
     // simple in-memory per-chat mode store
     private readonly Dictionary<long, string> _chatModes = new();
+
+    private string BuildHelpMessage(long chatId)
+    {
+        var currentMode = _chatModes.TryGetValue(chatId, out var mode) && !string.IsNullOrWhiteSpace(mode)
+            ? mode
+            : _telegramOptions.DefaultMode;
+
+        return
+            "Привет! Я бот для 6‑й лабораторной по МОЭЛ.\n" +
+            "Я отвечаю на вопросы по теме магистерской работы двумя способами:\n" +
+            "1) через YandexGPT (режим /mode_gpt)\n" +
+            "2) через генерацию по шаблонам (режим /mode_template)\n\n" +
+            $"Текущий режим для этого чата: {currentMode}\n\n" +
+            "Команды:\n" +
+            "/help — справка\n" +
+            "/mode_gpt — включить YandexGPT\n" +
+            "/mode_template — включить шаблонный режим\n\n" +
+            "Просто напишите вопрос, а я попробую ответить.";
+    }
+
+    private static string? GetCommand(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return null;
+        }
+
+        // Telegram может присылать команды в формате "/start@botname" и/или с аргументами.
+        var firstToken = text.Trim().Split(' ', 2, StringSplitOptions.RemoveEmptyEntries)[0];
+        var withoutMention = firstToken.Split('@', 2, StringSplitOptions.RemoveEmptyEntries)[0];
+        return withoutMention.ToLowerInvariant();
+    }
 }
