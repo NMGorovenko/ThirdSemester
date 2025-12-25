@@ -12,5 +12,9 @@
 3) Нажать **Run All**.
 
 Результат:
-- В конце появится `output/retrieval_grid.png` (query + топ похожих изображений).
+- В конце появятся:
+  - `output/retrieval_grid_random.png` (baseline: random init)
+  - `output/retrieval_grid_ssl.png` (после SimCLR)
 
+Примечание:
+- Query-картинки выбираются автоматически (по SSL-эмбеддингам) так, чтобы примеры были более показательными.
